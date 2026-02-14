@@ -1,5 +1,4 @@
 from pathlib import Path
-from sched import Event
 from watchdog.events import FileSystemEventHandler
 
 directories = {"C:\Users\jakub\Documents": [".pdf", ".docx", ".txt"],
