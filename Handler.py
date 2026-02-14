@@ -13,11 +13,25 @@ class FileMoveHandler(FileSystemEventHandler):
     
     def _process_file(self, file_path: Path):
         extension = file_path.suffix.lower()
-        for directory, extensions in directories.items():
+        for directory_name, extensions in directories.items():
+        
             if extension in extensions:
-                destination = Path(directory) / file_path.name
-                file_path.rename(destination)
-                print(f"Moved: {file_path} to {destination}")
+                dest_dir = Path(directory_name)
+                dest_dir.mkdir(parents=True, exist_ok=True)
+                destination = dest_dir / file_path.name
+
+                if destination.exists():
+                    print(f"Ostrzeżenie: Plik {file_path.name} już istnieje w miejscu docelowym.")
+                    return 
+
+                try:
+                    file_path.rename(destination)
+                    print(f"Sukces: Przeniesiono {file_path.name} do {directory_name}")
+                except PermissionError:
+                    print(f"Błąd: Brak uprawnień do przeniesienia {file_path.name}")
+                except Exception as e:
+                    print(f"Wystąpił nieoczekiwany błąd: {e}")
+
                 break
     
 
